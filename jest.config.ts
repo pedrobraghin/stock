@@ -8,6 +8,6 @@ export default {
   preset: 'ts-jest',
   testEnvironment: 'node',
   verbose: true,
-  collectCoverage: true,
+  collectCoverage: false,
   testMatch: ['<rootDir>/tests/**/*.ts'],
 };

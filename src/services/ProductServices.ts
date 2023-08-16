@@ -1,4 +1,4 @@
-import { IProduct, ProductInstance, IProductQuery, IUpdateProduct } from '../@types/IProduct';
+import { ICreateProduct, Product, IProductQuery, IUpdateProduct } from '../@types/IProduct';
 import { generateId } from '../utils/random-bytes';
 import { BadRequestError } from '../errors/BadRequestError';
 import { NotFoundError } from '../errors/NotFoundError';
@@ -10,8 +10,8 @@ import {
 	validateData,
 } from '../utils/validators';
 
-class ProductServices {
-	async storeProduct(data: IProduct): Promise<ProductInstance> {
+export class ProductServices {
+	async storeProduct(data: ICreateProduct): Promise<Product> {
 		const productCheck = await ProductRepository.findOne({ name: data.name });
 
 		if (productCheck) {
@@ -21,7 +21,7 @@ class ProductServices {
 		const id = generateId();
 		const total_income = data.quantity * data.price;
 
-		const validation = await validateData<IProduct>(createProductSchema, data);
+		const validation = await validateData<ICreateProduct>(createProductSchema, data);
 
 		if (validation.error) {
 			throw new BadRequestError('Validation error: ' + validation.errors);
@@ -36,7 +36,7 @@ class ProductServices {
 		return product;
 	}
 
-	async showProduct(id: string): Promise<ProductInstance> {
+	async showProduct(id: string): Promise<Product> {
 		const product = await ProductRepository.findById(id);
 
 		if (!product) {
@@ -46,7 +46,7 @@ class ProductServices {
 		return product;
 	}
 
-	async updateProduct(id: string, data: IUpdateProduct): Promise<ProductInstance> {
+	async updateProduct(id: string, data: IUpdateProduct): Promise<Product> {
 		const product = await ProductRepository.findById(id);
 
 		if (!product) {
@@ -85,11 +85,11 @@ class ProductServices {
 		return productEdited!;
 	}
 
-	async listProducts(params: IProductQuery): Promise<ProductInstance[]> {
+	async listProducts(params: IProductQuery): Promise<Product[]> {
 		
 		const products = await ProductRepository.list(params);
 
-		const listOfProducts = products.map((product: ProductInstance) => {
+		const listOfProducts = products.map((product: Product) => {
 			return product;
 		});
 
@@ -112,7 +112,7 @@ class ProductServices {
 		}
 		const sector = query.sector ? Number(query.sector) : undefined;
 
-		const products: ProductInstance[] = await ProductRepository.list({
+		const products: Product[] = await ProductRepository.list({
 			sector
 		});
 
@@ -121,7 +121,7 @@ class ProductServices {
 		}
 
 		const income = products.reduce(
-			(acumulator: number, prod: ProductInstance) => {
+			(acumulator: number, prod: Product) => {
 				return acumulator + Number(prod.total_income);
 			},
 			0

@@ -2,7 +2,7 @@ import {
   Model,
 } from "sequelize";
 
-export interface IProduct {
+export interface ICreateProduct {
   name: string;
   price: number;
   sector: string;
@@ -15,19 +15,14 @@ export interface IProductQuery {
   sector?: string | number;
 }
 
-export interface IProductCreation extends IProduct{
+export interface IProductCreation extends ICreateProduct{
   id: string;
   total_income: number;
 }
 
-export class ProductInstance extends Model<IProduct & IProductCreation, IProductCreation>{
-  declare id: string;
-  declare name: string;
-  declare price: number;
-  declare sector: string;
-  declare quantity?: number | undefined;
-  declare total_income?: number | undefined;
-}
+export class ProductModelDefinition extends Model<ICreateProduct & IProductCreation, IProductCreation> {}
+
+export interface Product extends IProductCreation {}
 
 export interface IProductQuery {
   id?: string;

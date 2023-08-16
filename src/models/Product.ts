@@ -1,9 +1,9 @@
 import Sequelize from 'sequelize';
 import { sequelize } from '../database/db';
-import { ProductInstance } from '../@types/IProduct';
+import { ProductModelDefinition } from '../@types/IProduct';
 
 
-export const Product = sequelize.define<ProductInstance>('Product', {
+export const ProductModel = sequelize.define<ProductModelDefinition>('Product', {
 	id: {
     type: Sequelize.STRING,
 		allowNull: false,

@@ -1,26 +1,26 @@
 import { FindOptions, Op } from 'sequelize';
-import { IProductCreation, IUpdateProduct, ProductInstance, IProductQuery } from '../@types/IProduct';
-import { Product } from '../models/Product';
+import { IProductCreation, IUpdateProduct, Product, IProductQuery } from '../@types/IProduct';
+import { ProductModel } from '../models/Product';
 
 export class ProductRepository {
-  async create(data: IProductCreation): Promise<ProductInstance> {
-    const product = await Product.create(data);
-    return product;
+  async create(data: IProductCreation): Promise<Product> {
+    const product = await ProductModel.create(data);
+    return product.dataValues;
   }
 
-  async findOne(query: IProductQuery): Promise<ProductInstance | null> {
-    const product = await Product.findOne({ where: {
+  async findOne(query: IProductQuery): Promise<Product | null> {
+    const product = await ProductModel.findOne({ where: {
       ...query
     } });
-    return product;
+    return product?.dataValues || null;
   }
 
-  async findById(id: string): Promise<ProductInstance | null> {
-    const product = await Product.findByPk(id);
-    return product;
+  async findById(id: string): Promise<Product | null> {
+    const product = await ProductModel.findByPk(id);
+    return product?.dataValues || null;
   }
 
-  async list(userQuery: IProductQuery): Promise<ProductInstance[]> {
+  async list(userQuery: IProductQuery): Promise<Product[]> {
     const query: IProductQuery = {
 			name: userQuery.name ? `%${userQuery.name}%` : '',
 			price: userQuery.price ? Number(userQuery.price) : undefined,
@@ -45,15 +45,17 @@ export class ProductRepository {
 			};
 		}
 
-    const products = await Product.findAll({ where: {
+    const products = await ProductModel.findAll({ where: {
       ...query
     }})
 
-    return products;
+    const productsData = products.map(p => p.dataValues);
+
+    return productsData;
   }
 
-  async update(id: string, data: IUpdateProduct):Promise<ProductInstance | null> {
-    const product = await Product.findByPk(id);
+  async update(id: string, data: IUpdateProduct):Promise<Product | null> {
+    const product = await ProductModel.findByPk(id);
 
     if (!product) return null;
 
@@ -61,17 +63,17 @@ export class ProductRepository {
       ...data
     });
 
-    return udpated;
+    return udpated.dataValues;
   }
 
-  async delete(id: string): Promise<ProductInstance | null> {
-    const product = await Product.findByPk(id);
+  async delete(id: string): Promise<Product | null> {
+    const product = await ProductModel.findByPk(id);
 
     if (!product) return null;
 
     await product.destroy();
 
-    return product;
+    return product.dataValues;
   }
 }
 

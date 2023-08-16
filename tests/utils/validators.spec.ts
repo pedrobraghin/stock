@@ -1,11 +1,11 @@
-import { IProduct } from "../../src/@types/IProduct";
+import { ICreateProduct } from "../../src/@types/IProduct";
 import { createProductSchema, updateProductSchema, validateData } from "../../src/utils/validators";
 import { describe, expect, it } from "@jest/globals";
 
 describe("Product validation", () => {
   describe("Create Product", () => {
     it("should validate create product input data", async () => {
-      const data: IProduct = {
+      const data: ICreateProduct = {
         name: "Test Product",
         sector: "1",
         price: 11,
@@ -47,7 +47,7 @@ describe("Product validation", () => {
     })
 
     it("should return an error when number input is less than 1 or greater than 5000", async () => {
-      const data: IProduct = {
+      const data: ICreateProduct = {
         name: "Test Product",
         sector: "1",
         price: 0,
@@ -59,7 +59,7 @@ describe("Product validation", () => {
     })
 
     it("should return an error when string input length is greater than 60", async () => {
-      const data: IProduct = {
+      const data: ICreateProduct = {
         name: "1234567890123456789012345678901234567890123456789012345678901234567890",
         sector: "1",
         price: 2,
